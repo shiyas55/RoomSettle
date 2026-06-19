@@ -1,0 +1,27 @@
+# Disable directory listing
+Options -Indexes
+
+# Prevent access to hidden files
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Prevent access to data, database files, logs and configuration metadata
+<FilesMatch "\.(sql|bak|json|md|log|sh)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Secure includes and configuration directories from direct HTTP access
+RewriteEngine On
+RewriteRule ^(config|includes|uploads)/.*\.php$ - [F,L]
+
+# Prevent script execution in uploads folder
+# This is a critical fallback to ensure uploaded files can't run php scripts
+<Directory "uploads">
+    <FilesMatch "\.(php|php5|phtml|php3|php4|phps|pl|py|jsp|asp|sh|cgi)$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+</Directory>
